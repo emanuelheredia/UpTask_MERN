@@ -1,21 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import clienteAxios from "../config/clienteAxios";
 import Alerta from "../components/Alerta";
 
 const NuevoPassword = () => {
 	const [alerta, setAlerta] = useState({});
 	const [tokenValido, setTokenValido] = useState(false);
 	const [password, setPassword] = useState("");
+	const [passwordModificado, setPasswordModificado] = useState(false);
 	const { token } = useParams();
 	useEffect(() => {
 		const comprobarToken = async () => {
 			try {
-				//TODO:Mover hacia un cliente axios
-				const { data } = await axios(
-					`${
-						import.meta.env.VITE_BACKEND_URL
-					}/app/usuario/olvide-password/${token}`,
+				const { data } = await clienteAxios(
+					`/usuario/olvide-password/${token}`,
 				);
 				setTokenValido(true);
 			} catch (error) {
@@ -34,13 +32,12 @@ const NuevoPassword = () => {
 			return;
 		}
 		try {
-			const { data } = await axios.post(
-				`${
-					import.meta.env.VITE_BACKEND_URL
-				}/app/usuario/olvide-password/${token}`,
+			const { data } = await clienteAxios.post(
+				`/usuario/olvide-password/${token}`,
 				{ password },
 			);
 			setAlerta({ msg: data.msg, error: false });
+			setPasswordModificado(true);
 		} catch (error) {
 			setAlerta({
 				msg: error.response.data.msg,
@@ -84,6 +81,14 @@ const NuevoPassword = () => {
 						className=" mb-5 bg-sky-700 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-sky-800 transition-colors"
 					/>
 				</form>
+			)}
+			{passwordModificado && (
+				<Link
+					className="block text-center my-5 text-slate-500 uppercase text-sm"
+					to="/"
+				>
+					Inicia Sesión
+				</Link>
 			)}
 		</>
 	);
