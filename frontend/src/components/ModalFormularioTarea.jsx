@@ -10,25 +10,45 @@ const ModalFormularioTarea = () => {
 	const {
 		handleModalTarea,
 		modalFormularioTarea,
-		mostrarAlerta,
+		setAlerta,
 		alerta,
 		submitTarea,
+		tarea,
 	} = useProyectos();
 	const [nombre, setNombre] = useState("");
 	const [descripcion, setDescricion] = useState("");
 	const [prioridad, setPrioridad] = useState("");
 	const [fechaEntrega, setFechaEntrega] = useState("");
 	const PRIORIDADES = ["Baja", "Media", "Alta"];
-	const handleSubmit = (e) => {
+	useEffect(() => {
+		setNombre(tarea.nombre);
+		setDescricion(tarea.descripcion);
+		setFechaEntrega(tarea.fechaEntrega);
+		setPrioridad(tarea.prioridad);
+	}, [tarea]);
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if ([nombre, prioridad, descripcion, fechaEntrega].includes("")) {
-			mostrarAlerta({
+			setAlerta({
 				msg: "todos los campos son obligatorios",
 				error: true,
 			});
+			setTimeout(() => {
+				setAlerta({});
+			}, 3000);
 			return;
 		}
-		submitTarea({ nombre, descripcion, prioridad, fechaEntrega, proyecto });
+		await submitTarea({
+			nombre,
+			descripcion,
+			prioridad,
+			fechaEntrega,
+			proyecto,
+		});
+		setDescricion("");
+		setNombre("");
+		setPrioridad("");
+		setFechaEntrega("");
 	};
 	const { msg } = alerta;
 	return (
