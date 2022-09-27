@@ -4,9 +4,13 @@ import useProyectos from "../hooks/useProyectos";
 import { Link } from "react-router-dom";
 import ModalFormularioTarea from "../components/ModalFormularioTarea";
 import Tarea from "../components/Tarea";
+import ModalEliminarTarea from "../components/ModalEliminarTarea";
+import Alerta from "../components/Alerta";
+import Colaborador from "../components/Colaborador";
+import ModalEliminarColaborador from "../components/ModalEliminarColaborador";
 
 const Proyecto = () => {
-	const { obtenerProyecto, proyecto, cargando, handleModalTarea } =
+	const { obtenerProyecto, proyecto, cargando, handleModalTarea, alerta } =
 		useProyectos();
 	const { id } = useParams();
 	useEffect(() => {
@@ -14,6 +18,7 @@ const Proyecto = () => {
 	}, []);
 	const { nombre } = proyecto;
 	if (cargando) return "Cargando...";
+	const { msg } = alerta;
 	return (
 		<>
 			<div className="flex justify-between">
@@ -61,6 +66,11 @@ const Proyecto = () => {
 				Nueva Tarea
 			</button>
 			<p className="font-bold text-xl mt-10">Tareas del Proyecto</p>
+			<div className="flex justify-center">
+				<div className="w-full md:w-1/3 lg:w-1/4">
+					{msg && <Alerta alerta={alerta} />}
+				</div>
+			</div>
 			<div className="bg-white shadow mt-10 rounded-lg">
 				{proyecto.tareas?.length ? (
 					proyecto.tareas?.map((tarea) => (
@@ -72,7 +82,32 @@ const Proyecto = () => {
 					</p>
 				)}
 			</div>
+			<div className="flex items-center justify-between ">
+				<p className="font-bold text-xl mt-10">Colaboradores</p>
+				<Link
+					className="text-gray-400 uppercase font-bold hover:text-black"
+					to={`/proyectos/nuevo-colaborador/${proyecto._id}`}
+				>
+					Añadir
+				</Link>
+			</div>
+			<div className="bg-white shadow mt-10 rounded-lg">
+				{proyecto.colaboradores?.length ? (
+					proyecto.colaboradores?.map((colaborador) => (
+						<Colaborador
+							key={colaborador._id}
+							colaborador={colaborador}
+						/>
+					))
+				) : (
+					<p className="text-center my-5 p-10">
+						No hay Colaboradores en este Proyecto
+					</p>
+				)}
+			</div>
 			<ModalFormularioTarea />
+			<ModalEliminarTarea />
+			<ModalEliminarColaborador />
 		</>
 	);
 };

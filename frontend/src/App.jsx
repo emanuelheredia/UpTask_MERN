@@ -12,6 +12,7 @@ import Proyectos from "./paginas/Proyectos";
 import NuevoProyecto from "./paginas/NuevoProyecto";
 import Proyecto from "./paginas/Proyecto";
 import EditarProyecto from "./paginas/EditarProyecto";
+import NuevoColaborador from "./paginas/NuevoColaborador";
 
 function App() {
 	return (
@@ -41,6 +42,10 @@ function App() {
 							<Route
 								path="crear-proyecto"
 								element={<NuevoProyecto />}
+							/>
+							<Route
+								path="nuevo-colaborador/:id"
+								element={<NuevoColaborador />}
 							/>
 							<Route path=":id" element={<Proyecto />} />
 							<Route
