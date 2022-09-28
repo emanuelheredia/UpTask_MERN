@@ -9,14 +9,21 @@ import Alerta from "../components/Alerta";
 import Colaborador from "../components/Colaborador";
 import ModalEliminarColaborador from "../components/ModalEliminarColaborador";
 import useAdmin from "../hooks/useAdmin";
+import io from "socket.io-client";
+
+let socket;
 
 const Proyecto = () => {
 	const admin = useAdmin();
 	const { obtenerProyecto, proyecto, cargando, handleModalTarea, alerta } =
 		useProyectos();
-	const { id } = useParams();
+	const params = useParams();
 	useEffect(() => {
-		obtenerProyecto(id);
+		obtenerProyecto(params.id);
+	}, []);
+	useEffect(() => {
+		socket = io(import.meta.env.VITE_BACKEND_URL);
+		socket.emit("abrir proyecto", params.id);
 	}, []);
 	const { nombre } = proyecto;
 	if (cargando) return "Cargando...";
@@ -43,7 +50,8 @@ const Proyecto = () => {
 						</svg>
 						<Link
 							className="cursor-pointer uppercase font-bold"
-							to={`/proyectos/editar/${id}`}
+							S
+							to={`/proyectos/editar/${params.id}`}
 						>
 							Editar
 						</Link>

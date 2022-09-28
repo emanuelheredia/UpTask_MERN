@@ -5,6 +5,7 @@ import clienteAxios from "../config/clienteAxios";
 import useAuth from "../hooks/useAuth";
 
 const Login = () => {
+	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [alerta, setAlerta] = useState({});
@@ -22,6 +23,7 @@ const Login = () => {
 			});
 			setAlerta({});
 			localStorage.setItem("token", data.token);
+			navigate("proyectos");
 			setAuth(data);
 		} catch (error) {
 			setAlerta({ msg: error.response.data.msg, error: true });
